@@ -1,0 +1,14 @@
+{
+  "name": "shopping-list-electron",
+  "version": "1.0.0",
+  "description": "first attempt at electron with guide",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Zach Morel",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.7.6"
+  }
+}
