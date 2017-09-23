@@ -2,7 +2,7 @@ const electron = require('electron')
 const url = require('url')
 const path = require('path')
 
-const {app, BrowserWindow, Menu} = electron
+const {app, BrowserWindow, Menu, ipcMain} = electron
 
 let mainWindow
 
@@ -49,12 +49,18 @@ function createAddWindow(){
         addWindow = null
     })
 
-    // BUild menu from template
+    // Build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
     // Insert menu
     Menu.setApplicationMenu(mainMenu) 
 }
 
+// CATCH item:add
+ipcMain.on('item:add', function(e, item){
+    console.log(item)
+    mainWindow.webContents.send('item:add', item)
+    addWindow.close()
+})
 
 // Menu Template
 const mainMenuTemplate = [
@@ -91,4 +97,22 @@ const mainMenuTemplate = [
     }
 ]
 
-// 24:00 on video
+
+// Add Develpoer tools to Menu list if not in Production
+if(process.env.NODE_ENV !== 'production') {
+    mainMenuTemplate.push({
+        label : 'Developer Tools',
+        submenu : [
+            {
+                label : 'Toggle DevTools',
+                accelerator : process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+                click(item, focusedWindow){
+                    focusedWindow.toggleDevTools() 
+                }
+            },
+            {
+                role : 'reload'
+            }
+        ]
+    })
+}
