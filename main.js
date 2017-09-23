@@ -4,6 +4,9 @@ const path = require('path')
 
 const {app, BrowserWindow, Menu, ipcMain} = electron
 
+// SET ENV
+process.env.NODE_ENV = 'production'
+
 let mainWindow
 
 // Listen for the app to be ready 
@@ -57,7 +60,7 @@ function createAddWindow(){
 
 // CATCH item:add
 ipcMain.on('item:add', function(e, item){
-    console.log(item)
+    // console.log(item)
     mainWindow.webContents.send('item:add', item)
     addWindow.close()
 })
@@ -85,7 +88,10 @@ const mainMenuTemplate = [
         {
             label: 'Clear Items',
             accelerator: process.platform == 'darwin' ?  'Command+C' : 'Ctrl+C',
-            role: 'Add'
+            role: 'Clear',
+            click(){
+                mainWindow.webContents.send('item:clear')
+            }
         },
         {
             label: 'Quit',
